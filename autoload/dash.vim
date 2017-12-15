@@ -10,21 +10,21 @@ function! dash#add_keywords_for_filetype(filetype) "{{{
 endfunction
 "}}}
 
-function! dash#autocommands() "{{{
-  if g:dash_autocommands != 1
-    return
-  endif
-  if has('autocmd')
-    augroup DashVim
-      autocmd!
-      for pair in items(s:groups)
-        let filetype = pair[0]
-        execute "autocmd FileType " .  filetype . " call dash#add_keywords_for_filetype('" . filetype . "')"
-      endfor
-    augroup END
-  endif
-endfunction
-"}}}
+"function! dash#autocommands() "{{{
+"  if g:dash_autocommands != 1
+"    return
+"  endif
+"  if has('autocmd')
+"    augroup DashVim
+"      autocmd!
+"      for pair in items(s:groups)
+"        let filetype = pair[0]
+"        execute "autocmd FileType " .  filetype . " call dash#add_keywords_for_filetype('" . filetype . "')"
+"      endfor
+"    augroup END
+"  endif
+"endfunction
+""}}}
 
 function! dash#complete(arglead, cmdline, cursorpos) "{{{
   return []
@@ -52,7 +52,9 @@ function! dash#search(bang, ...) "{{{
     call add(keywords, keyword)
   else
     let filetype = get(split(&filetype, '\.'), -1, '')
-    if exists('b:dash_keywords')
+    if !exists('b:dash_keywords')
+        call dash#add_keywords_for_filetype(filetype)
+    endif
       if v:count == 0
         call extend(keywords, b:dash_keywords)
       else
@@ -60,9 +62,6 @@ function! dash#search(bang, ...) "{{{
         let keyword = get(b:dash_keywords, position, filetype)
         call add(keywords, keyword)
       endif
-    else
-      call add(keywords, filetype)
-    endif
   endif
   call s:search(term, keywords)
 endfunction

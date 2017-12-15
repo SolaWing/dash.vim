@@ -41,10 +41,10 @@ else
 endif
 "}}}
 
-if !exists('g:dash_autocommands')
-  let g:dash_autocommands = 1
-  call dash#autocommands()
-endif
+" if !exists('g:dash_autocommands')
+"   let g:dash_autocommands = 1
+"   call dash#autocommands()
+" endif
 
 if !exists('g:dash_activate')
   let g:dash_activate = 1
